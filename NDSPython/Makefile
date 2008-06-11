@@ -25,6 +25,7 @@ INCLUDES	:=	include
 #---------------------------------------------------------------------------------
 
 PARDIR		:=	$(dir $(dir $(CURDIR)))
+PDIR		:=  $(dir $(CURDIR))
 
 MOD_SRCDIR	:=	modules/
 
@@ -54,7 +55,7 @@ LDFLAGS	:=	-specs=ds_arm9.specs -g $(ARCH) -mno-fpu -Wl,-Map,$(notdir $*.map) $(
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
-LIBS	:= -lfat -lnds9 -lpython2.5 -lm -lz
+LIBS	:= -lfat -lnds9 -lnds7 -lpython2.5 -lm -lz
 
 
 #---------------------------------------------------------------------------------
@@ -76,7 +77,7 @@ CFLAGS += -I$(DEVKITPRO)/libnds/include
 CXXFLAGS += $(CFLAGS)
 
 #LDFLAGS += -L$(DEVKITPRO)/libnds/lib -lfat -lnds9
-LDFLAGS += -L$(LIBNDS)/lib -L$(LIBFAT)/nds/lib -lfat -lnds9
+LDFLAGS += -L$(LIBNDS)/lib -L$(LIBFAT)/nds/lib -lfat -lnds9 -lnds7
 
 EXTRA_OBJS	=	$(MOD_SRCDIR)ndsmodule.o \
 			$(MOD_SRCDIR)ndsosmodule.o
@@ -137,7 +138,7 @@ $(BUILD):
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
-	@rm -fr $(BUILD) $(TARGET).elf $(TARGET).nds $(TARGET).arm9 $(TARGET).ds.gba
+	@rm -fr $(BUILD) $(TARGET).elf $(TARGET).nds $(TARGET).arm9 $(TARGET).ds.gba $(TARGET)_.ds.gba $(TARGET)_fs.ds.gba
 run:
 	wmb -data $(OUTPUT).nds
 
@@ -149,6 +150,11 @@ DEPENDS	:=	$(OFILES:.o=.d)
 #---------------------------------------------------------------------------------
 # main targets
 #---------------------------------------------------------------------------------
+$(OUTPUT)_fs.ds.gba	: $(OUTPUT).ds.gba
+	cp $(OUTPUT).ds.gba $(OUTPUT)_.ds.gba
+	padbin 512 $(OUTPUT)_.ds.gba
+	cat $(OUTPUT)_.ds.gba $(PDIR)/python.img > $(OUTPUT)_fs.ds.gba
+	dlditool $(PDIR)/fcsr.dldi $(OUTPUT)_fs.ds.gba
 $(OUTPUT).ds.gba	: 	$(OUTPUT).nds
 $(OUTPUT).nds	: 	$(OUTPUT).arm9
 $(OUTPUT).arm9	:	$(OUTPUT).elf

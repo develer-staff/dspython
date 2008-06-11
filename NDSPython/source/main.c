@@ -13,6 +13,8 @@ PyMODINIT_FUNC initwrap_system(void);
 PyMODINIT_FUNC initwrap_video(void);
 PyMODINIT_FUNC initwrap_interrupts(void);
 PyMODINIT_FUNC initwrap_videoGL(void);
+PyMODINIT_FUNC initwrap_rumble(void);
+PyMODINIT_FUNC initwrap_touch(void);
 
 int pyMain(void) {
 	FILE *fp;
@@ -26,6 +28,8 @@ int pyMain(void) {
 	initwrap_video();
 	initwrap_interrupts();
 	initwrap_videoGL();
+	initwrap_rumble();
+	initwrap_touch();
 
 	fp = fopen("/python/main.py", "r");
 	PyRun_SimpleFile(fp, "/python/main.py");

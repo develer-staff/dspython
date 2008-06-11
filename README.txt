@@ -134,8 +134,8 @@ In other words, don't expect flowers smiles and honey, it's more like howling
 naked in a night of full moon while stipulating an unholy alliance with evil
 forces, and it's still not close enough but it gives you an idea ;)
 
-Execute all the following steps in the environment created by msys_pyds.bat
-file.
+Execute all the following steps in the console environment created by
+msys_pyds.bat file.
 
 
 === Compile zlib ===
@@ -194,7 +194,30 @@ make && make
 cd libfat-src-20070127/
 make
 
+=== (optional) Create a fat12 fcsr image file ===
+
+To run dspython in an emulator, you can create a fat12 fcsr filesystem image file
+that contains the scripts you would otherwise place in your homebrew storage
+device.  To do this:
+
+Place your scripts in NDSPython/fcsrimage/fcsr/python .  This folder already
+contains a main.py, which you can replace with your own.
+
+Proceed to the next step.  The actual image file will be built later.
+
 === Compile NDSPython ===
+
+If you want to generate a rom file suitable to run in an emulator using the
+fcsr trick described above, typing:
+
+cd NDSPython
+sh newimg.sh
+
+will build the fat12 image and prepare the rom.
+
+
+Instead, if you just want to build a rom to be used in actual hardware, this
+will be enough:
 
 cd NDSPython
 make

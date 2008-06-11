@@ -64,7 +64,9 @@ wrappers: source/arm9/wrap_console.c \
           source/arm9/wrap_video.c \
 		  source/arm9/wrap_videoGL.c \
 		  source/arm9/wrap_system.c \
-		  source/arm9/wrap_interrupts.c
+		  source/arm9/wrap_interrupts.c \
+		  source/arm9/wrap_rumble.c \
+		  source/arm7/wrap_touch.c
 
 PYTHON := python
 PYREXC := /c/Python24/Scripts/pyrexc.py
@@ -84,6 +86,12 @@ source/arm9/wrap_system.c: include/nds/wrap_system.pyx
 source/arm9/wrap_interrupts.c: include/nds/wrap_interrupts.pyx
 	$(PYTHON) $(PYREXC) include/nds/wrap_interrupts.pyx -o source/arm9/wrap_interrupts.c
 
+source/arm9/wrap_rumble.c: include/nds/arm9/wrap_rumble.pyx
+	$(PYTHON) $(PYREXC) include/nds/arm9/wrap_rumble.pyx -o source/arm9/wrap_rumble.c
+
+source/arm7/wrap_touch.c: include/nds/arm7/wrap_touch.pyx
+	$(PYTHON) $(PYREXC) include/nds/arm7/wrap_touch.pyx -o source/arm7/wrap_touch.c
+	
 #---------------------------------------------------------------------------------
 lib/libnds9.a: lib $(DEPENDS)/arm9 $(BUILD)/arm9
 #---------------------------------------------------------------------------------
@@ -119,7 +127,7 @@ lib:
 #---------------------------------------------------------------------------------
 clean:
 #---------------------------------------------------------------------------------
-	rm -fr $(DEPENDS) $(BUILD) *.bz2 source/arm9/wrap_*.c
+	rm -fr $(DEPENDS) $(BUILD) *.bz2 source/arm9/wrap_*.c source/arm7/wrap_*.c
 	$(MAKE) TARGET=$(CURDIR)/basic -C basicARM7 clean
 
 #---------------------------------------------------------------------------------
