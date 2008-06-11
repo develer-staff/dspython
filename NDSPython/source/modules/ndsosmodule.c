@@ -43,10 +43,10 @@ static PyObject *ndsos_error(char *s) {
 /* Maybe we want to put some more fields in later, so use a struct. */
 
 
-char *getcwd(char *__buf, size_t __size) {
+/*char *getcwd(char *__buf, size_t __size) {
 	strncpy(__buf, cwd, __size);
 	return __buf;
-}
+}*/
 
 /* NDS file commands */
 

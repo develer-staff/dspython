@@ -2,6 +2,10 @@
 #include <malloc.h>
 #include <stdio.h>
 
+/****/
+#include <nds.h>
+/****/
+
 PyDoc_STRVAR(nds_mallinfo_doc,
 "mallinfo() -> returns memory allocation information");
 
@@ -94,9 +98,28 @@ nds_meminfo(PyObject *self, PyObject *args)
 	return Py_None;
 }
 
+/****************/
+PyDoc_STRVAR(nds_hello_doc,
+"hello() -> prints hello");
+
+static PyObject *
+nds_hello(PyObject *self, PyObject *args)
+{
+	int i;
+	for(i = 0; i < 256 * 256; i++){
+		VRAM_A[i] = RGB15(31,0,0);
+		VRAM_B[i] = RGB15(31,0,0);
+	}
+	printf("Hello\n");
+	Py_INCREF(Py_None);
+	return Py_None;
+}
+/****************/
+
 static PyMethodDef nds_methods[] = {
 	{"mallinfo",	nds_mallinfo,	METH_NOARGS,	nds_mallinfo_doc},
 	{"meminfo",		nds_meminfo,	METH_NOARGS,	nds_meminfo_doc},
+	{"hello",		nds_hello,	    METH_NOARGS,	nds_hello_doc},
 	{NULL,			NULL}		/* sentinel */
 };
 

@@ -17,7 +17,7 @@ include $(DEVKITARM)/ds_rules
 TARGET		:=	$(shell basename $(CURDIR))
 BUILD		:=	build
 SOURCES		:=	source
-DATA		:=	data  
+DATA		:=	data
 INCLUDES	:=	include
 
 #---------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ MOD_SRCDIR	:=	modules/
 PYTHON_DIR	:=	$(PARDIR)slp-250
 ZLIB_DIR	:=	$(PARDIR)zlib-1.2.3
 
-EXTRA_LIBS	:=	-L$(PYTHON_DIR) -L$(ZLIB_DIR) 
+EXTRA_LIBS	:=	-L$(PYTHON_DIR) -L$(ZLIB_DIR)
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -55,13 +55,18 @@ LDFLAGS	:=	-specs=ds_arm9.specs -g $(ARCH) -mno-fpu -Wl,-Map,$(notdir $*.map) $(
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
 LIBS	:= -lfat -lnds9 -lpython2.5 -lm -lz
- 
- 
+
+
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
 # include and lib
 #---------------------------------------------------------------------------------
-LIBDIRS	:=	$(LIBNDS)
+
+# overwrite ds_rules
+LIBNDS := /c/NDSPython/libnds-src-20070503
+LIBFAT := /c/NDSPython/libfat-src-20070127
+
+LIBDIRS	:=	$(LIBNDS):$(LIBFAT)
 
 EXTERNALINCLUDES :=	$(PYTHON_DIR) \
 			$(PYTHON_DIR)/include \
@@ -69,7 +74,9 @@ EXTERNALINCLUDES :=	$(PYTHON_DIR) \
 
 CFLAGS += -I$(DEVKITPRO)/libnds/include
 CXXFLAGS += $(CFLAGS)
-LDFLAGS += -L$(DEVKITPRO)/libnds/lib -lfat -lnds9
+
+#LDFLAGS += -L$(DEVKITPRO)/libnds/lib -lfat -lnds9
+LDFLAGS += -L$(LIBNDS)/lib -L$(LIBFAT)/nds/lib -lfat -lnds9
 
 EXTRA_OBJS	=	$(MOD_SRCDIR)ndsmodule.o \
 			$(MOD_SRCDIR)ndsosmodule.o
@@ -80,9 +87,9 @@ EXTRA_OBJS	=	$(MOD_SRCDIR)ndsmodule.o \
 #---------------------------------------------------------------------------------
 ifneq ($(BUILD),$(notdir $(CURDIR)))
 #---------------------------------------------------------------------------------
- 
+
 export OUTPUT	:=	$(CURDIR)/$(TARGET)
- 
+
 export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir)) \
 					$(foreach dir,$(DATA),$(CURDIR)/$(dir))
 
@@ -110,23 +117,23 @@ endif
 export OFILES	:=	$(addsuffix .o, $(BINFILES)) \
 			$(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(SFILES:.s=.o) \
 			$(EXTRA_OBJS)
- 
+
 export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 					$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
 					$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
 					-I$(CURDIR)/$(BUILD) $(foreach dir,$(EXTERNALINCLUDES),-I$(dir))
- 
+
 export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib) $(EXTRA_LIBS)
- 
+
 .PHONY: $(BUILD) clean
- 
+
 #---------------------------------------------------------------------------------
 $(BUILD):
 	@[ -d $@ ] || mkdir -p $@
 	@[ -d $@/gba_nds_fat ] || mkdir -p $@/gba_nds_fat
 	@[ -d $@/modules ] || mkdir -p $@/modules
-	@make --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile 
- 
+	@make --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
+
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
@@ -136,9 +143,9 @@ run:
 
 #---------------------------------------------------------------------------------
 else
- 
+
 DEPENDS	:=	$(OFILES:.o=.d)
- 
+
 #---------------------------------------------------------------------------------
 # main targets
 #---------------------------------------------------------------------------------
@@ -146,7 +153,7 @@ $(OUTPUT).ds.gba	: 	$(OUTPUT).nds
 $(OUTPUT).nds	: 	$(OUTPUT).arm9
 $(OUTPUT).arm9	:	$(OUTPUT).elf
 $(OUTPUT).elf	:	$(OFILES)
- 
+
 #---------------------------------------------------------------------------------
 %.jpg.o	:	%.jpg
 #---------------------------------------------------------------------------------
@@ -158,10 +165,10 @@ $(OUTPUT).elf	:	$(OFILES)
 #---------------------------------------------------------------------------------
 	@echo $(notdir $<)
 	@$(bin2o)
-  
-  
+
+
 -include $(DEPENDS)
- 
+
 #---------------------------------------------------------------------------------------
 endif
 #---------------------------------------------------------------------------------------
