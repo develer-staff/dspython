@@ -15,14 +15,26 @@ PyMODINIT_FUNC initwrap_interrupts(void);
 PyMODINIT_FUNC initwrap_videoGL(void);
 PyMODINIT_FUNC initwrap_rumble(void);
 PyMODINIT_FUNC initwrap_touch(void);
+PyMODINIT_FUNC initwrap_input(void);
+PyMODINIT_FUNC initwrap_bios(void);
 
 int pyMain(void) {
 	FILE *fp;
 
+	printf("Console init...\n");
+	consoleDemoInit();
+	printf("done\n");
+	
+	printf("Fat init...\n");
 	fatInitDefault();
 	Py_SetPythonHome("/python");
-	Py_Initialize();
+	printf("done\n");
 
+	printf("Python init...\n");
+	Py_Initialize();
+	printf("done\n");
+
+	printf("Wrappers init...\n");
 	initwrap_console();
 	initwrap_system();
 	initwrap_video();
@@ -30,8 +42,12 @@ int pyMain(void) {
 	initwrap_videoGL();
 	initwrap_rumble();
 	initwrap_touch();
-
-	fp = fopen("/python/main.py", "r");
+    initwrap_input();
+    initwrap_bios();
+	printf("done\n");
+	
+    printf("All done. Starting execution\n");
+	fp = fopen("/python/main.py", "r");	
 	PyRun_SimpleFile(fp, "/python/main.py");
 	fclose(fp);
 

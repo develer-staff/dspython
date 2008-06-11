@@ -168,21 +168,17 @@ is useless to us since we already have libpython2.5.a .
 
 We need to alter linker settings so that Python gets enough stack to run on DS.
 
-Edit c:\devkitPro\devkitARM\arm-eabi\lib\ds_arm9.ld and change this section.
+Edit c:\devkitPro\devkitARM\arm-eabi\lib\ds_arm9.ld and change:
 
-          MEMORY {
- 
-          /* original settings
-            rom		: ORIGIN = 0x08000000, LENGTH = 32M
-            ewram	: ORIGIN = 0x02000000, LENGTH = 4M - 4k
-            dtcm	: ORIGIN = 0x0b000000, LENGTH = 16K
-            itcm	: ORIGIN = 0x01000000, LENGTH = 32K
-          */
-            rom		: ORIGIN = 0x08000000, LENGTH = 32M
-            ewram	: ORIGIN = 0x02000000, LENGTH = 4M - 260k
-            dtcm	: ORIGIN = 0x023bf000, LENGTH = 260K - 4k
-            itcm	: ORIGIN = 0x01000000, LENGTH = 32K
-          }
+ewram	: ORIGIN = 0x02000000, LENGTH = 4M - 4k
+to
+ewram	: ORIGIN = 0x02000000, LENGTH = 4M - 260k
+
+and
+
+__sp_usr	=	__sp_irq - 0x100;
+to
+__sp_usr	=	__ewram_end + 0x40000;
 
 === Compile libnds with wrappers ===
 

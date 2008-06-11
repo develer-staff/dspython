@@ -11,6 +11,9 @@ POWER_ALL=(POWER_ALL_2D | POWER_3D_CORE | POWER_MATRIX)
 
 cdef extern from "nds/system.h":
 	void powerON(int on) # { REG_POWERCNT |= on;}
+	void lcdMainOnBottom() #{ REG_POWERCNT &= ~POWER_SWAP_LCDS; }
 
 def wpowerON(on):
 	powerON(on)
+def wlcdMainOnBottom():
+	lcdMainOnBottom()

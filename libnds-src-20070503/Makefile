@@ -61,15 +61,23 @@ all:	wrappers lib/libnds9.a  basic.arm7
 # wrappers
 
 wrappers: source/arm9/wrap_console.c \
-          source/arm9/wrap_video.c \
+		  source/arm9/wrap_video.c \
 		  source/arm9/wrap_videoGL.c \
 		  source/arm9/wrap_system.c \
 		  source/arm9/wrap_interrupts.c \
 		  source/arm9/wrap_rumble.c \
-		  source/arm7/wrap_touch.c
+		  source/arm9/wrap_input.c \
+		  source/arm7/wrap_touch.c \
+		  source/arm9/wrap_bios.c
 
 PYTHON := python
 PYREXC := /c/Python24/Scripts/pyrexc.py
+
+source/arm9/wrap_bios.c: include/nds/wrap_bios.pyx
+	$(PYTHON) $(PYREXC) include/nds/wrap_bios.pyx -o source/arm9/wrap_bios.c
+
+source/arm9/wrap_input.c: include/nds/arm9/wrap_input.pyx
+	$(PYTHON) $(PYREXC) include/nds/arm9/wrap_input.pyx -o source/arm9/wrap_input.c
 
 source/arm9/wrap_console.c: include/nds/arm9/wrap_console.pyx
 	$(PYTHON) $(PYREXC) include/nds/arm9/wrap_console.pyx -o source/arm9/wrap_console.c
