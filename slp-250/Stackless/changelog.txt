@@ -1,0 +1,35 @@
+20020524	ct	There appears to be a problem with stack switching
+			and tkinter. When I disable it, things work. This is
+			most probably a stack misuse with C locals used as
+			globals. This gives a problem when squirreled away...
+			Should we possibly disable stack manips completely
+			by default and have the user switch it on?
+
+20020524	ct	There have been massive changes in thee meantime, and
+			I've missed logging them in the changelog.
+			This will become better now.
+			The old ideas of reusing old stackless stuff are gone.
+			There is now always "hardware" switching of tasklets.
+			Also, Limbo like channels have been introduced, which
+			give us a very simple multitasking.
+
+200203 to	ct	Thinking, thinking and reading. Alef, Limbo, Occam.
+200205		Got hired by IronPort for working on Stackless and
+			their application based upon it.
+
+20020122	ct	There are some influences of olde Stackless. Without repeating
+			the full mess, a number of ideas are very useful
+			Especially, the frame dispatcher idea will be revived.
+			It turns out to make sense:
+			Try to let the innermost interpreter resolve some recusrions.
+			Find an equivalent of olde Py_UnwindToken. Probably the 
+			protocol of the new generators can be extended.
+			Now I *do* think to modify frames. They get an additional
+			field for their C stack part.
+			There will definately be a revival of f_execute.
+			This fits perfectly: For pure frames, this is eval_frame.
+			For frames which need to restore their stack, it will be a helper
+			function.
+			I can see the light :-)
+
+20020121	ct	Initial setup, first Stackless version (without functionality yet)

@@ -1,0 +1,153 @@
+This is the source code and complete instructions for building Python 2.5 for
+the Nintendo DS.
+
+Author:   Richard Tew.
+Date:     28th January 2007
+Email:    richard.m.tew@gmail.com
+Website:  http://www.disinterest.org/NDS/Python25.html
+
+Credits
+-------
+
+Python requires little work for it to run on other platforms.  If standard
+output is supported so that things like printf work and there is some
+method of input so that Python code can be entered and executed then most
+of the work is done.  The rest is binding Python to the method of input
+and also filesystem.  Most of the work was done already and the process of
+making this port involved linking that work together.  These are the
+people to thank for that work:
+
+  The cross-compiling environment devkitPro/devkitArm.
+  http://sourceforge.net/projects/devkitpro
+  Wntrmute
+
+  The patches to Python 2.5 so that it can be cross-compiled.
+  https://sourceforge.net/tracker/?func=detail&atid=305470&aid=1597850&group_id=5470
+  Han-Wen Nienhuys & Jan Nieuwenhuizen
+
+  The keyboard interface and console for the Nintendo DS.
+  http://headkaze.webpal.info/
+  Headspin.
+
+  The filesystem support for homebrew devices.
+  http://chishm.drunkencoders.com/gba_nds_fat/index.html
+  Chishm
+
+Compiling
+---------
+
+  1. Install the latest version of devkitPro.  This should include:
+     [ http://sourceforge.net/projects/devkitpro ]
+  
+     - devkitARM
+     - msys
+     - libnds
+     - libfat (not used at this time)
+     - dswifi (not used at this time)
+     
+     The devkitpro installer should download and install these for you.
+
+  2. Go to the MinGW web site and download and install in this order:
+     [ http://mingw.sourceforge.net/download.shtml ] 
+     
+     - msysDTK
+     - MinGW
+     - msys-autoconf (at least version 2.59)
+     - msys-automake (at least version 1.8.2)
+
+     You may need to take some initiative getting msys and mingw
+     working.  It didn't configure properly for me and I had to
+     copy 'msys/1.0' over 'msys/' in order to get automake and autoconf
+     into the path (the other folders in 'msys/1.0' are required to be
+     on the same level as the binaries so it is not possible to add
+     the 'bin' directories into the path).  Then I had to install the
+     updated versions manually.
+
+  3. Compile the zlib static library.
+
+     a) cd NDSPython
+        cd zlib-1.2.3
+        make
+
+     This should build 'libz.a' then it will error when it tries to
+     link something else.  But that is not important as the static
+     library is what we wanted.
+
+  4. Compile the Python static library.
+
+     You need to have Python installed and to know the path to it
+     in order to be able to cross-compile it.  For me it is installed
+     in '/c/Program\ Files/Python25' so replace that with your path
+     to it.
+     
+     If your python is installed in the same location as mine, and
+     all your settings are the same, then you should be able to use
+     the same prebuilt 'configure' and 'Makefile'.
+  
+     a) cd ..
+     	cd NDSPython
+        cd slp-250
+        export BASECFLAGS="-ffast-math -mthumb -mthumb-interwork -DARM9 -DNDS"
+        export CFLAGS="-ffast-math -mthumb -mthumb-interwork -DARM9  -DNDS"
+        export LDFLAGS="-specs=ds_arm9.specs -g -mthumb -mthumb-interwork"
+   	export CC_FOR_BUILD=gcc
+        export PYTHON_FOR_BUILD=/c/Program\ Files/Python25/python
+        sh configure --host=arm-eabi --config-cache
+     
+     b) make
+
+     This should build 'libpython2.5.a' then it will complain about not
+     finding 'getcwd' and error when linking something after that.  But
+     that is not important as you have the static library and 'getcwd' is
+     provided by the NDSPython source code.
+
+  5. Compile the NDSPython rom.
+
+     a) Alter low level linker settings so that Python gets enough stack
+        on the Nintendo DS device to run.  Edit this file:
+        
+          devkitPro\devkitARM\arm-eabi\lib\ds_arm9.ld
+
+        Replace this altered section:
+
+          MEMORY {
+
+          /* original settings
+            rom		: ORIGIN = 0x08000000, LENGTH = 32M
+            ewram	: ORIGIN = 0x02000000, LENGTH = 4M - 4k
+            dtcm	: ORIGIN = 0x0b000000, LENGTH = 16K
+            itcm	: ORIGIN = 0x01000000, LENGTH = 32K
+          */
+            rom		: ORIGIN = 0x08000000, LENGTH = 32M
+            ewram	: ORIGIN = 0x02000000, LENGTH = 4M - 260k
+            dtcm	: ORIGIN = 0x023bf000, LENGTH = 260K - 4k
+            itcm	: ORIGIN = 0x01000000, LENGTH = 32K
+          }
+  
+     b) cd ..
+        cd NDSPython
+        make
+
+     c) Install support for your homebrew device using dlditool.
+        For instance for the compact flash Supercard:
+        
+        dlditool sccf.dldi NDSPython.nds
+
+     d) If your homebrew device is one which uses the 'ds.gba' roms,
+        then you need to type 'make' again, which will take the 'nds' rom
+        with your homebrew support and build another 'ds.gba' rom with
+        that support.
+
+     This should give you a usable compiled rom.
+
+  6. Install it on the Nintendo DS.
+  
+     a) Copy the NDSPython rom which works on your device somewhere on it.
+
+     b) Copy 'NDSPython/NDSPython/python' to the root of your homebrew media.
+        That is, the python directory found there should be placed directly
+        in the root of your homebrew media.  This is where NDS Python looks
+        for it.  You can test it works when you run NDS Python on your
+        Nintendo DS by executing 'import slptest'.
+        
+        

@@ -1,0 +1,93 @@
+ * WELCOME dear Stackless python programmer.
+ *
+ * This example is based on the ideas from EVE presentation, held
+ * at US PyCon 2006 and presented by CCP games. If you haven't yet read
+ * the powerpoint, please go and read it, so you understant what are
+ * the features I'm demoing you here.
+ * http://www.stackless.com/Members/rmtew/News%20Archive/newsPyCon2006Pres
+ *
+ * Quick disclaimer:
+ * This code is a stripped down from Project Xenocide svn repository
+ * to contain only the most important parts. Because of that I needed to
+ * truncate some classes, move a few methods, created a few globals
+ * and drop a huge amount of code (like unittesting framework, log4cxx etc) 
+ * which we use, but are not needed here. That's why the code is a bit mess. ;)
+ * If you are interested, the full Project Xenocide source is available
+ * at www.projectxenocide.com 
+ *
+ *
+ * The basic workflow of this example is the following:
+ *  1) Initialize python
+ *  2) Export class Sync and method stacklessMain to python using boost.python
+ *  3) Run a simple test to verify that python is working.
+ *  4) Start the staclessMain, which is a C++ method, as the "main tasklet" into
+ *     stackless context.
+ *  5) Execute a few tests which demonstrate the beNice, Watchdog and Sleeper features.  
+ *
+ * A word about the tests: 
+ * We use TDD (Test Driven Development) with project xenocide and we have found it usefull.
+ * The features of this demo are all presented as simple tests. The Sync class has
+ * a handy method, Sync::pushTestResult(py::object), which takes a python object, which
+ * can be anything (number, string etc). Once the test case is completed, the results
+ * are checked that they match what they are supposed to be. If you don't know 
+ * what TDD is, I'd suggest that you go and read some documentation (from Wikipedia, 
+ * for example)
+ *
+ * Notice that both popTestResult and py::extract can throw an error if they fail,
+ * and these errors are not catched at this demo. Anyway, if everything is right,
+ * they wont throw anything and the tests are executed as they should. 
+ * 
+ * TEST 1: Just verify that the pushTestResult, boost::python and python itself are working.
+ * It simply pushes number 42 as a test result and then it reads it and asserts that it really
+ * is the number 42.
+ * 
+ * TEST 2: Create a tasklet, which calls beNice four times.
+ *
+ * TEST 3: Tests the watchdog feature. The idea is, that every running tasklet
+ * should call beNice as soon as possible. Once every tasklet has called beNice,
+ * the watchdog exists and returns Py_None. With game programming, for example
+ * in our Project Xenocide, the method containing the watchdog loop is called
+ * once every frame. So if a tasklet takes too much time without calling beNice,
+ * the FPS rate slows down and this is bad.
+ *
+ * And this is the idea of the watchdog. If one process (a tasklet) goes wild,
+ * and, for example, goes into while 1: -loop, the watchdog hits the execution limit
+ * (which sould normally be much larger than the current 1000 executions in this demo)
+ * and the watchdog method exists returning the tasklet object which took too much time.
+ * This can be then used for stacktrace, debugging etc.
+ *
+ * So this test creates a tasklet running while 1 -loop and waits that the watchdog hits the limit.
+ *
+ * TEST 4: This tests the Sleeper system. Sync.sleepReal() is used to put the calling
+ * tasklet into sleep so, that it doesn't use any processor time. It does not sleep
+ * actually the specified amount of time, but it could very easily be modified to do
+ * actual sleeping. 
+ *
+ * This test creates five tasklets, which each sleeps for a different amount of time.
+ * The system, which handles the sleeping, must wake the sleepers only when
+ * the specified amount of time has passed, so this test verifies that the tasklets
+ * are awaken in correct time (or actually in the correct order)
+ *
+ * If you have any guestions, please email to stackless mailing list (stackless@stackless.com),
+ * or contact me (Juho "Garo" Makinen) at #xenocide IRC channel, located at freenode.net irc
+ * network, or mailing me directly to juho.makinen@gmail.com
+ *
+ * - Juho Makinen, http://www.juhonkoti.net, 2006-04-04
+
+
+The correct output of this tech demo should be the following:
+---------------------------------------------------------------------------------
+Checking that we could execute a python code. retval == 42 (expected 42)
+from stacklessMain: c is: 1
+from stacklessMain: c is: 2
+from stacklessMain: c is: 3
+from stacklessMain: c is: 4
+Checking that c is actually four: c == 4
+Watchdog interrupted a tasklet which was running too long without calling beNice
+Killing this tasklet, retval: 0 (expecting 0)
+I'm awake, I slept for 250 time units
+I'm awake, I slept for 500 time units
+I'm awake, I slept for 1000 time units
+I'm awake, I slept for 1000 time units
+I'm awake, I slept for 2000 time units
+---------------------------------------------------------------------------------
