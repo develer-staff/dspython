@@ -1,3 +1,0 @@
-# Edit this file for local setup changes
-
-zlib zlibmodule.c -I../zlib-1.2.3 -L../zlib-1.2.3 -lz

@@ -63,8 +63,8 @@ LIBS	:= -lfat -lnds9 -lpython2.5 -lm -lz
 #---------------------------------------------------------------------------------
 
 # overwrite ds_rules
-LIBNDS := /c/NDSPython/libnds-src-20070503
-LIBFAT := /c/NDSPython/libfat-src-20070127
+LIBNDS := /c/dspython/libnds-src-20070503
+LIBFAT := /c/dspython/libfat-src-20070127
 
 LIBDIRS	:=	$(LIBNDS):$(LIBFAT)
 

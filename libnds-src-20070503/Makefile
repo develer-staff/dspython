@@ -47,9 +47,9 @@ export BASEFLAGS	:=	-g -Wall -O2\
 				-fomit-frame-pointer\
 				-ffast-math \
 				-I$(INCDIR) \
-				-I/c/NDSPython/slp-250/Include \
-				-I/c/NDSPython/slp-250 \
-				-I/c/NDSPython/slp-250/Stackless
+				-I/c/dspython/slp-250/Include \
+				-I/c/dspython/slp-250 \
+				-I/c/dspython/slp-250/Stackless
 
 
 .PHONY:	all dist docs clean lib/libnds9.a  lib/libnds7.a
@@ -67,7 +67,7 @@ wrappers: source/arm9/wrap_console.c \
 		  source/arm9/wrap_interrupts.c
 
 PYTHON := python
-PYREXC := /c/Programmi/Python24/Scripts/pyrexc
+PYREXC := /c/Python24/Scripts/pyrexc.py
 
 source/arm9/wrap_console.c: include/nds/arm9/wrap_console.pyx
 	$(PYTHON) $(PYREXC) include/nds/arm9/wrap_console.pyx -o source/arm9/wrap_console.c

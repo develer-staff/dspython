@@ -40,9 +40,9 @@ def wglInit():
 	glInit()
 def wglEnable(int bits):
 	glEnable(bits)
-def wglClearColor(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha):
+def wglClearColor(red, green, blue, salpha):
 	glClearColor(red, green, blue, alpha)
-def wglClearPolyID(unsigned char ID):
+def wglClearPolyID(ID):
 	glClearPolyID(ID)
 def wglClearDepth(unsigned short depth):
 	glClearDepth(depth)
@@ -54,7 +54,7 @@ def wglTranslatef(float x, float y, float z):
 	glTranslatef(x, y, z)
 def wglBegin(int mode):
 	glBegin(mode)
-def wglViewPort(unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2):
+def wglViewPort(x1, y1, x2, y2):
 	glViewPort(x1, y1, x2, y2)
 def wglMatrixMode(int mode):
 	glMatrixMode(mode)
