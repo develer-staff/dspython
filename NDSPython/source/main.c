@@ -47,7 +47,7 @@ int pyMain(void) {
 	printf("done\n");
 	
     printf("All done. Starting execution\n");
-	fp = fopen("/python/main.py", "r");	
+	fp = fopen("/python/main.py", "r");
 	PyRun_SimpleFile(fp, "/python/main.py");
 	fclose(fp);
 

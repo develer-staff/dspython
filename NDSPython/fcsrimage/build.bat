@@ -11,7 +11,7 @@ for /f "tokens=3,4*" %%a in ( 'dir /w /s /-C %2 ^| findstr "File(s)"') do @set i
 set /A size="%info%+64"
 echo %size%
 
-if /I %size% LSS 50000  (                      set /A size="50000" )
+if /I %size% LSS 100000  (                      set /A size="100000" )
 
 echo Creating image
 mkdosfs.exe %1 %size%

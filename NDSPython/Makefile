@@ -8,6 +8,8 @@ endif
 
 include $(DEVKITARM)/ds_rules
 
+PATH		:=	/c/dspython/NDSPython/dldinoap:$(PATH)
+
 #---------------------------------------------------------------------------------
 # TARGET is the name of the output
 # BUILD is the directory where object files & intermediate files will be placed
@@ -138,7 +140,8 @@ $(BUILD):
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
-	@rm -fr $(BUILD) $(TARGET).elf $(TARGET).nds $(TARGET).arm9 $(TARGET).ds.gba $(TARGET)_.ds.gba $(TARGET)_fs.ds.gba
+	@rm -fr $(BUILD) $(TARGET).elf $(TARGET).nds $(TARGET).arm9 $(TARGET).ds.gba \
+	        $(TARGET)_.ds.gba $(TARGET)_fs.ds.gba $(TARGET)_.nds $(TARGET)_fs.nds 
 run:
 	wmb -data $(OUTPUT).nds
 
@@ -150,11 +153,20 @@ DEPENDS	:=	$(OFILES:.o=.d)
 #---------------------------------------------------------------------------------
 # main targets
 #---------------------------------------------------------------------------------
+all: $(OUTPUT)_fs.ds.gba $(OUTPUT)_fs.nds
+
 $(OUTPUT)_fs.ds.gba	: $(OUTPUT).ds.gba
 	cp $(OUTPUT).ds.gba $(OUTPUT)_.ds.gba
 	padbin 512 $(OUTPUT)_.ds.gba
 	cat $(OUTPUT)_.ds.gba $(PDIR)/python.img > $(OUTPUT)_fs.ds.gba
 	dlditool $(PDIR)/fcsr.dldi $(OUTPUT)_fs.ds.gba
+	dldinoap $(OUTPUT)_fs.ds.gba
+$(OUTPUT)_fs.nds	: $(OUTPUT).nds
+	cp $(OUTPUT).nds $(OUTPUT)_.nds
+	padbin 512 $(OUTPUT)_.nds
+	cat $(OUTPUT)_.nds $(PDIR)/python.img > $(OUTPUT)_fs.nds
+	dlditool $(PDIR)/fcsr.dldi $(OUTPUT)_fs.nds
+	dldinoap $(OUTPUT)_fs.nds
 $(OUTPUT).ds.gba	: 	$(OUTPUT).nds
 $(OUTPUT).nds	: 	$(OUTPUT).arm9
 $(OUTPUT).arm9	:	$(OUTPUT).elf
