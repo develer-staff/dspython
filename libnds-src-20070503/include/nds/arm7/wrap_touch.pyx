@@ -8,9 +8,9 @@ cdef extern from "nds/jtypes.h":
 		short int z2
 
 cdef extern from "nds/arm7/touch.h":
-	touchPosition touchReadXY()
+	touchPosition c_touchReadXY "touchReadXY"()
 
-def wtouchReadXY():
+def touchReadXY():
 	cdef touchPosition pos
-	pos = touchReadXY()
+	pos = c_touchReadXY()
 	return (pos.x, pos.y, pos.px, pos.py, pos.z1, pos.z2)

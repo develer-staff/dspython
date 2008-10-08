@@ -8,12 +8,12 @@ cdef extern from "nds/arm9/console.h":
 	#sub display.  It is intended for use in prototyping applications which need print ability and not actual
 	#game use.  Print functionality can be utilized with just this call.
 	#*/
-	void consoleDemoInit()
+	void c_consoleDemoInit "consoleDemoInit" ()
 
 	#/*! \fn void consoleClear(void)
 	#\brief Clears the screan by iprintf("\x1b[2J");
 	#*/
-	void consoleClear()
+	void c_consoleClear "consoleClear" ()
 
-def wconsoleDemoInit():
-	consoleDemoInit()
+def consoleDemoInit():
+	c_consoleDemoInit()

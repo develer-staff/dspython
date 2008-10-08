@@ -17,11 +17,11 @@ KEY_TOUCH  = BIT(12) #!< Touchscreen pendown.
 KEY_LID    = BIT(13) #!< Lid state.
     
 cdef extern from "nds/arm9/input.h":
-    void scanKeys()
-    unsigned int keysHeld()
+    void c_scanKeys "scanKeys" ()
+    unsigned int c_keysHeld "keysHeld" ()
 
-def wscanKeys():
-    scanKeys()
+def scanKeys():
+    c_scanKeys()
 
-def wkeysHeld():
-    return keysHeld()
+def keysHeld():
+    return c_keysHeld()

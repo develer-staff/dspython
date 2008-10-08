@@ -4,11 +4,11 @@ def BIT(n):
 IRQ_VBLANK=BIT(0)
 
 cdef extern from "nds/interrupts.h":
-	void irqInit()
-	void irqSet(int irq, int handler)
+	void c_irqInit "irqInit" ()
+	void c_irqSet "irqSet" (int irq, int handler)
 
-def wirqInit():
-	irqInit()
+def irqInit():
+	c_irqInit()
 
-def wirqSet(irq, handler):
-	irqSet(irq, handler)
+def irqSet(irq, handler):
+	c_irqSet(irq, handler)

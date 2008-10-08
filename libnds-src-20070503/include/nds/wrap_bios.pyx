@@ -1,5 +1,5 @@
 cdef extern from "nds/bios.h":
-	void swiWaitForVBlank()
+	void c_swiWaitForVBlank "swiWaitForVBlank" ()
 
-def wswiWaitForVBlank():
-	swiWaitForVBlank()
+def swiWaitForVBlank():
+	c_swiWaitForVBlank()

@@ -2,16 +2,16 @@ cdef extern from "nds/jtypes.h":
 	ctypedef int bool
 
 cdef extern from "nds/arm9/rumble.h":
-	bool isRumbleInserted()
-	void setRumble(bool position)
+	bool c_isRumbleInserted "isRumbleInserted" ()
+	void c_setRumble "setRumble" (bool position)
 
-def wisRumbleInserted():
-	return isRumbleInserted()
+def isRumbleInserted():
+	return c_isRumbleInserted()
 
-def wsetRumble(position):
-	setRumble(position)
+def setRumble(position):
+	c_setRumble(position)
 
 def vibrate(int length):
-	for i in range(0,length):
-		wsetRumble(True)
-		wsetRumble(False)
+	for i in range(0, length):
+		setRumble(True)
+		setRumble(False)

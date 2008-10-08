@@ -35,16 +35,16 @@ MODE_FB3=(0x000E0000)
 VRAM_A_LCD=0
 
 cdef extern from "nds/arm9/video.h":
-	void videoSetMode(int mode)
-	void vramSetBankA(int a)
+	void c_videoSetMode "videoSetMode" (int mode)
+	void c_vramSetBankA "vramSetBankA" (int a)
 
-def wvideoSetMode(int mode):
-	videoSetMode(mode)
+def videoSetMode(int mode):
+	c_videoSetMode(mode)
 
-def wvramSetBankA(int a):
-	vramSetBankA(a)
+def vramSetBankA(int a):
+	c_vramSetBankA(a)
 
-def wvramAPutPixel(int x, int y, int color):
+def vramAPutPixel(int x, int y, int color):
 	cdef unsigned short *VRAM_A
 	VRAM_A=<unsigned short *>0x6800000
 	VRAM_A[x + 256 * y] = color

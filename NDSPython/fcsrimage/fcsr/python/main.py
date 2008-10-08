@@ -16,19 +16,19 @@ def insideBox(p, p1, p2, p3, p4):
 def resizeGL(width, height):
 	if height==0:
 		height=1
-	wglViewPort(0, 0, width - 1, height - 1)
-	wglMatrixMode(GL_PROJECTION)
-	wglLoadIdentity()
-	wglOrthof32(0, width, height, 0, 0, 1)
-	wglMatrixMode(GL_MODELVIEW)
-	wglLoadIdentity()
+	glViewPort(0, 0, width - 1, height - 1)
+	glMatrixMode(GL_PROJECTION)
+	glLoadIdentity()
+	glOrthof32(0, width, height, 0, 0, 1)
+	glMatrixMode(GL_MODELVIEW)
+	glLoadIdentity()
 
 def initGL():
 	#glShadeModel(GL_SMOOTH)
-	wglInit()
-	wglEnable(GL_ANTIALIAS)
-	wglClearColor(0, 0, 0, 0)
-	wglClearDepth(0x7FFF)
+	glInit()
+	glEnable(GL_ANTIALIAS)
+	glClearColor(0, 0, 0, 0)
+	glClearDepth(0x7FFF)
 	#glClearDepth(1.0)
 	#glEnable(GL_DEPTH_TEST)
 	#glDepthFunc(GL_LEQUAL)
@@ -39,13 +39,13 @@ def initGL():
 	#glEnable( GL_LIGHT1 )
 
 def initDS():
-	wpowerON(POWER_ALL)
-	wconsoleDemoInit()
+	powerON(POWER_ALL)
+	consoleDemoInit()
 
-	wvideoSetMode(MODE_0_3D)
-	wlcdMainOnBottom()
-	wirqInit()
-	wirqSet(IRQ_VBLANK, 0)
+	videoSetMode(MODE_0_3D)
+	lcdMainOnBottom()
+	irqInit()
+	irqSet(IRQ_VBLANK, 0)
 
 class Squirrel(object):
 	states = {"HIDDEN": 100,
@@ -149,13 +149,13 @@ class Squirrel(object):
 		height = self._height()
 		p1, p2, p3, p4 = self.boundingBox()
 
-		wglBegin(GL_QUADS)
-		wglColor3f(color[0], color[1], color[2])
-		wglVertex3v16(p1[0], p1[1], 0)
-		wglVertex3v16(p2[0], p2[1], 0)
-		wglVertex3v16(p3[0], p3[1], 0)
-		wglVertex3v16(p4[0], p4[1], 0)
-		wglEnd()
+		glBegin(GL_QUADS)
+		glColor3f(color[0], color[1], color[2])
+		glVertex3v16(p1[0], p1[1], 0)
+		glVertex3v16(p2[0], p2[1], 0)
+		glVertex3v16(p3[0], p3[1], 0)
+		glVertex3v16(p4[0], p4[1], 0)
+		glEnd()
 
 class Game(object):
 	pos_squirrels = [(50, 50), (150, 150), (50, 150), (150, 50)]
@@ -194,9 +194,9 @@ while 1:
 	x = 0
 	y = 0
 	while x == 0 and y == 0:
-		pos = wtouchReadXY()
+		pos = touchReadXY()
 		x, y = float(pos[2]), float(pos[3])
-		wswiWaitForVBlank()
+		swiWaitForVBlank()
 
 	print "Game start!"
 		
@@ -208,7 +208,7 @@ while 1:
 
 	while not gameover:
 
-		pos = wtouchReadXY()
+		pos = touchReadXY()
 		x, y = float(pos[2]), float(pos[3])
 
 		if x != 0 and y != 0:
@@ -216,7 +216,7 @@ while 1:
 			if rv:
 				points += 1
 
-		wglPolyFmt(POLY_ALPHA(31) | POLY_CULL_NONE)
+		glPolyFmt(POLY_ALPHA(31) | POLY_CULL_NONE)
 		game.update()
 		game.draw()
 
@@ -224,8 +224,8 @@ while 1:
 		if frames > 20*50:
 			gameover = True
 
-		#wscanKeys()
-		#keys = wkeysHeld()
+		#scanKeys()
+		#keys = keysHeld()
 
 		#if keys & KEY_UP:
 			#rotateX += 3
@@ -236,8 +236,8 @@ while 1:
 		#if keys & KEY_RIGHT:
 			#rotateY -= 3
 
-		wglFlush(0)
-		wswiWaitForVBlank()
+		glFlush(0)
+		swiWaitForVBlank()
 	
 	print "You scored", points, "points!"
 	print "Touch the screen to try again."

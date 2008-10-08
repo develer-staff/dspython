@@ -7,23 +7,23 @@ from wrap_touch import *
 from wrap_input import *
 from wrap_bios import *
 
-wpowerON(POWER_ALL)
-wconsoleDemoInit()
+powerON(POWER_ALL)
+consoleDemoInit()
 
-wvideoSetMode(MODE_0_3D)
-wlcdMainOnBottom()
-wirqInit()
-wirqSet(IRQ_VBLANK, 0)
-wglInit()
-wglEnable(GL_ANTIALIAS)
-wglClearColor(0,0,15,31)
-wglClearPolyID(63)
-wglClearDepth(0x7FFF)
-wglViewPort(0,0,255,191)
-wglMatrixMode(GL_PROJECTION)
-wglLoadIdentity()
-wgluPerspective(35, 256.0 / 192.0, 0.1, 100)
-wgluLookAt(0.0, 0.0, 1.0, \
+videoSetMode(MODE_0_3D)
+lcdMainOnBottom()
+irqInit()
+irqSet(IRQ_VBLANK, 0)
+glInit()
+glEnable(GL_ANTIALIAS)
+glClearColor(0,0,15,31)
+glClearPolyID(63)
+glClearDepth(0x7FFF)
+glViewPort(0,0,255,191)
+glMatrixMode(GL_PROJECTION)
+glLoadIdentity()
+gluPerspective(35, 256.0 / 192.0, 0.1, 100)
+gluLookAt(0.0, 0.0, 1.0, \
 		0.0, 0.0, 0.0, \
 		0.0, 1.0, 0.0)
 
@@ -34,7 +34,7 @@ print "dspython v0.1"
 
 while 1:
 
-	pos = wtouchReadXY()
+	pos = touchReadXY()
 	x, y = float(pos[2]), float(pos[3])
 	
 	x = (x * 5) / 256
@@ -43,8 +43,8 @@ while 1:
 	x -= 2.5
 	y -= 1.5
 
-	wscanKeys()
-	keys = wkeysHeld()
+	scanKeys()
+	keys = keysHeld()
 
 	if keys & KEY_UP:
 		rotateX += 3
@@ -55,43 +55,43 @@ while 1:
 	if keys & KEY_RIGHT:
 		rotateY -= 3
 
-	wglPushMatrix()
+	glPushMatrix()
 
-	wglTranslatef(0, 0, -1.0)
+	glTranslatef(0, 0, -1.0)
     
-	wglRotateX(rotateX)
-	wglRotateY(rotateY)
+	glRotateX(rotateX)
+	glRotateY(rotateY)
 
 	#Set the current matrix to be the model matrix
-	wglMatrixMode(GL_MODELVIEW)
+	glMatrixMode(GL_MODELVIEW)
 
 	#ds specific, several attributes can be set here	
-	wglPolyFmt(POLY_ALPHA(31) | POLY_CULL_NONE)
+	glPolyFmt(POLY_ALPHA(31) | POLY_CULL_NONE)
 
 	#draw the obj
-	wglBegin(GL_TRIANGLES)
+	glBegin(GL_TRIANGLES)
 
-	wglColor3f(1.0,0,0)
-	wglVertex3f(-1.0,-1.0,0)
+	glColor3f(1.0,0,0)
+	glVertex3f(-1.0,-1.0,0)
 
-	wglColor3f(0,1.0,0)
-	wglVertex3f(1.0, -1.0, 0)
+	glColor3f(0,1.0,0)
+	glVertex3f(1.0, -1.0, 0)
 
-	wglColor3f(0,0,1.0)
-	wglVertex3f(0, 1.0, 0)
+	glColor3f(0,0,1.0)
+	glVertex3f(0, 1.0, 0)
 
-	wglEnd()
+	glEnd()
 
-	wglLoadIdentity()
-	#wglTranslatef(-1.5,0.0,-6.0)
-	wglTranslatef(x,-y,-3.0)
-	wglBegin(GL_TRIANGLES)
-	wglVertex3f( 0.0, 1.0, 0.0)
-	wglVertex3f(-1.0,-1.0, 0.0)
-	wglVertex3f( 1.0,-1.0, 0.0)
-	wglEnd()
+	glLoadIdentity()
+	#glTranslatef(-1.5,0.0,-6.0)
+	glTranslatef(x,-y,-3.0)
+	glBegin(GL_TRIANGLES)
+	glVertex3f( 0.0, 1.0, 0.0)
+	glVertex3f(-1.0,-1.0, 0.0)
+	glVertex3f( 1.0,-1.0, 0.0)
+	glEnd()
 
-	wglPopMatrix(1)
+	glPopMatrix(1)
 
-	wglFlush(0)
-	wswiWaitForVBlank()
+	glFlush(0)
+	swiWaitForVBlank()
