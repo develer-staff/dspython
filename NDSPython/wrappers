@@ -1,0 +1,14 @@
+LIBNDS_INCLUDE=/c/devkitPro/dspython/libnds-1.4.6/include
+MOD_SRCDIR=/c/devkitPro/dspython/NDSpython/arm9/source
+pyrex_scripts=/c/Python26/Scripts/pyrexc.py
+
+python $pyrex_scripts $LIBNDS_INCLUDE/nds/wrap_system.pyx -o $MOD_SRCDIR/wrap_system.c
+python $pyrex_scripts $LIBNDS_INCLUDE/nds/wrap_interrupts.pyx -o $MOD_SRCDIR/wrap_interrupts.c
+python $pyrex_scripts $LIBNDS_INCLUDE/nds/arm9/wrap_console.pyx -o $MOD_SRCDIR/wrap_console.c
+python $pyrex_scripts $LIBNDS_INCLUDE/nds/arm9/wrap_video.pyx -o $MOD_SRCDIR/wrap_video.c
+python $pyrex_scripts $LIBNDS_INCLUDE/nds/arm9/wrap_rumble.pyx -o $MOD_SRCDIR/wrap_rumble.c
+python $pyrex_scripts $LIBNDS_INCLUDE/nds/arm9/wrap_input.pyx -o $MOD_SRCDIR/wrap_input.c
+python $pyrex_scripts $LIBNDS_INCLUDE/nds/arm9/wrap_videoGL.pyx -o $MOD_SRCDIR/wrap_videoGL.c
+python $pyrex_scripts $LIBNDS_INCLUDE/nds/arm9/wrap_background.pyx -o $MOD_SRCDIR/wrap_background.c
+python $pyrex_scripts $LIBNDS_INCLUDE/nds/wrap_timers.pyx -o $MOD_SRCDIR/wrap_timers.c
+python $pyrex_scripts $LIBNDS_INCLUDE/nds/arm9/wrap_keyboard.pyx -o $MOD_SRCDIR/wrap_keyboard.c

@@ -30,6 +30,7 @@
 #endif
 
 #include <stdio.h>
+
 #ifndef NULL
 #   error "Python.h requires that stdio.h define NULL."
 #endif
