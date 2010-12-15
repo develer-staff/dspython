@@ -1,15 +1,20 @@
-/* libnds wrappers for Python */
+// Main executable.
+// Runs /python/main.py if it exists, displays
+// an interactive keyboard otherwise.
 
 #include <stdio.h>
 #include <string.h>
-#include <fat.h>
 #include <Python.h>
 #include <nds.h>
-#include <filesystem.h>
 
-#define STATE_RUN 1
-#define STATE_EXIT 0
-#define MAXBUFLEN 1024*5
+#define USE_FAT 1
+
+#ifdef USE_FAT
+#include <fat.h>
+#else
+#include <filesystem.h>
+#endif
+
 PyMODINIT_FUNC initnds(void);
 PyMODINIT_FUNC initndsos(void);
 PyMODINIT_FUNC initwrap_console(void);
@@ -23,62 +28,34 @@ PyMODINIT_FUNC initwrap_background(void);
 PyMODINIT_FUNC initwrap_timers(void);
 PyMODINIT_FUNC initwrap_keyboard(void);
 
+// Keyboard functions
 void moveCursorLeft(u32 times);
 void moveCursorRight(u32 times);
 void clearBuf(char *buf,u32 len);
-char inputBuf[MAXBUFLEN]={0};
-int i=0;
 
-int pyMain_nitro(void) {
+// Keyboard buffer
+#define MAXBUFLEN (1024*5)
+char inputBuf[MAXBUFLEN] = {0};
+
+// Keyboard offset
+int i = 0;
+
+void run_keyboard(void)
+{
+	const int STATE_RUN = 1;
+	const int STATE_EXIT = 0;
 	
 	lcdMainOnBottom();
-	videoSetMode(MODE_0_2D);//set main screen 2d mode
-	consoleDemoInit();  //setup the sub screen for printing
-	//Keyboard *  keyboardInit (Keyboard *keyboard, int layer, BgType type, BgSize size, int mapBase, int tileBase, bool mainDisplay, bool loadGraphics) 
-	keyboardInit (NULL,3, BgType_Text4bpp,BgSize_T_256x512,20, 0,true,true);
+	videoSetMode(MODE_0_2D);
+	keyboardInit(NULL, 3, BgType_Text4bpp, BgSize_T_256x512, 20, 0, true, true);
 	keyboardShow();
-	//FILE *fp;
-	//consoleDemoInit();
-	
-	printf("console init\n");
-	printf("done\n");
-	if (nitroFSInit()) {
-		printf("nitroFSInit is done\n");
-	}
-	else
-		printf("nitro isnt ok\n");
-	
-	Py_SetPythonHome("/python");
-	printf("PythonHome=/python\n");
 
-	printf("Python init...\n");
-	Py_Initialize();
-	if ( !Py_IsInitialized() )  
-	{
-		iprintf("Python can't initialize!\n");
-		return -1;
-	}
-	printf("done\n");
-
-	printf("Wrappers init...\n");
-	initnds();
-	initndsos();
-	initwrap_console();
-	initwrap_system();
-	initwrap_video();
-	initwrap_interrupts();
-	initwrap_videoGL();
-	initwrap_rumble();
-        initwrap_input();
-	initwrap_background();
-	initwrap_timers();
-	initwrap_keyboard();
-	printf("done\n");
-	printf("All done. Starting execution\n");
 	consoleClear();
+
 	int key=0,len=0,j=0;
 	u8 flag_show=1,frame=0,state=STATE_EXIT,count=0;
-	while(1) {
+	while(1)
+	{
 		swiWaitForVBlank();
 		frame++;
 		key = keyboardUpdate();
@@ -106,10 +83,7 @@ int pyMain_nitro(void) {
 						inputBuf[j+1]=inputBuf[j];
 					}
 				}
-
-
 			}
-		
 		}
 		else if(key==DVK_LEFT)
 		{
@@ -131,7 +105,6 @@ int pyMain_nitro(void) {
 		{
 			i=0;
 			clearBuf(inputBuf,MAXBUFLEN);
-			
 		}
 		else if(key==DVK_MENU)
 		{
@@ -154,10 +127,6 @@ int pyMain_nitro(void) {
 					consoleClear();
 				}
 			}
-				
-		}
-		else
-		{
 		}
 		
 		if(flag_show)
@@ -174,15 +143,7 @@ int pyMain_nitro(void) {
 			frame=0;
 		}
 		iprintf("%s",inputBuf);
-        }
-	
-	//fp = fopen("main.py", "rb");
-	//PyRun_SimpleFile(fp, "main.py");
-	//fclose(fp);
-	//while(1){
-	//	swiWaitForVBlank();
-	//	}
-	return 0;
+    }
 }
 void clearBuf(char *buf,u32 len)
 {
@@ -211,33 +172,30 @@ void moveCursorRight(u32 times)
 		if(inputBuf[i]=='\n')break;
 	}
 }
-/*u8 getCurLoc(u32 cur_index)
+
+// Common initialization code.  Must init the fs interface even if
+// it's going to use the interactive keyboard, because the
+// interpreter will load the Python libraries (if any) from the fs.
+void init(void)
 {
-	u32 j=cur_index;
-	int n=-1;
-	while(inputBuf[j]!='\n')
-	{
-		if(j==0)
-		j--;
-		n++;
-	}
-	return n;
-}*/
-	
-int pyMain_fat(void){
-	FILE *fp;
-	
+	int fs_init = 0;
+
 	consoleDemoInit();
-	printf("console init\n");
-	printf("done\n");
-	if (fatInitDefault()) {
-		printf("fat is done");
-	}
-	else
-		printf("fat isnt ok\n");
+	printf("Console init OK\n");
 	
+#ifdef USE_FAT
+	fs_init = fatInitDefault();
+#else
+	fs_init = nitroFSInit();
+#endif
+
+	if (fs_init)
+		printf("Fat init OK\n");
+	else
+		printf("Fat init failed!\n");
+
 	Py_SetPythonHome("/python");
-	printf("done\n");
+	printf("PYTHONHOME set to /python\n");
 
 	printf("Python init...\n");
 	Py_Initialize();
@@ -245,26 +203,32 @@ int pyMain_fat(void){
 
 	printf("Wrappers init...\n");
 	initnds();
-	//initndsos();
+	initndsos();
 	initwrap_console();
 	initwrap_system();
 	initwrap_video();
 	initwrap_interrupts();
 	initwrap_videoGL();
 	initwrap_rumble();
-        initwrap_input();
+	initwrap_input();
 	printf("done\n");
-	printf("All done. Starting execution\n");
-	fp = fopen("main.py", "rb");
-	PyRun_SimpleFile(fp, "main.py");
-	fclose(fp);
-	while(1){
-		swiWaitForVBlank();
-		}
-	return 0;
-	}
 
-int main(void) {
-	return pyMain_nitro();
-	//return pyMain_fat();
+	printf("Starting execution\n");
+}
+
+int main(void)
+{
+	FILE *fp;
+
+	init();
+	
+	fp = fopen("/python/main.py", "rb");
+	if (fp) {
+		PyRun_SimpleFile(fp, "/python/main.py");
+		fclose(fp);
+	} else {
+		printf("Unable to find /python/main.py\n");
+		run_keyboard();
+	}
+	return 0;
 }
