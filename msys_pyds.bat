@@ -17,7 +17,7 @@ rem stackless
 set ARCH=-mthumb -mthumb-interwork
 set BASECFLAGS=-ffast-math -mthumb -mthumb-interwork -DARM9 -DNDS
 set CFLAGS=-ffast-math -mthumb -mthumb-interwork -DARM9 -DNDS
-set LDFLAGS=-specs=ds_arm9.specs -g -mthumb -mthumb-interwork
+set LDFLAGS=-specs=ds_arm9.specs -g -mthumb -mthumb-interwork -lnds9 -L/C/devkitPro/dspython/libnds-1.4.6/lib
 
 set CC_FOR_BUILD=gcc
 
