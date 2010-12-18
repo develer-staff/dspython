@@ -1,6 +1,6 @@
 SET PYTHONDIR=/c/Python26/
 SET DEVKITPRO=/c/devkitPro/
-SET DSPYTHON=/c/devkitPro/dspython/
+SET DSPYTHON=/c/dspython/
 SET MINGWDIR=/c/MinGW/
 
 rem

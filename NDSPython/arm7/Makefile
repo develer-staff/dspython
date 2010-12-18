@@ -42,7 +42,7 @@ LIBS	:=	-ldswifi7 -lmm7 -lnds7
 # list of directories containing libraries, this must be the top level containing
 # include and lib
 #---------------------------------------------------------------------------------
-LIBNDS := /C/devkitPro/dspython/libnds-1.4.6
+LIBNDS := $(DSPYTHON)/libnds-1.4.6
 LIBDIRS	:=	$(LIBNDS)
  
   

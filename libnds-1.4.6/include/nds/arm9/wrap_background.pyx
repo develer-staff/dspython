@@ -54,7 +54,7 @@ cdef extern from "nds/arm9/decompress.h":
 	ctypedef enum DecompressType:
 		pass
 		
-cdef extern from "C:/devkitPro/dspython/NDSpython/arm9/source/extern.h":
+cdef extern from "../../NDSpython/arm9/source/extern.h":
 	void c_decompress_file "decompress_file" (char *filename,unsigned int dst,DecompressType type_de)
 	
 def bgInit(layer,type_bg,size_bg,mapBase,tileBase):
@@ -74,10 +74,3 @@ def bgUpdate():
 	
 def decompress_file(filename,dst,type_de):
 	c_decompress_file(filename,dst,type_de)
-
-
-
-
-
-
-

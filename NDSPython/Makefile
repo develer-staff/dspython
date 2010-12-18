@@ -10,7 +10,7 @@ include $(DEVKITARM)/ds_rules
 export TARGET		:=	$(shell basename $(CURDIR))
 export TOPDIR		:=	$(CURDIR)
 
-NITRO_FILES := /C/devkitPro/dspython/NDSpython/nitrofiles
+NITRO_FILES := $(DSPYTHON)/NDSpython/nitrofiles
 
 .PHONY: $(TARGET).arm7 $(TARGET).arm9
 

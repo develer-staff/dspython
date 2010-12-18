@@ -25,7 +25,7 @@ INCLUDES	:=	include
 #---------------------------------------------------------------------------------
 # custom directories
 #---------------------------------------------------------------------------------
-PARDIR		:=	/C/devkitPro/dspython/
+PARDIR		:=	$(DSPYTHON)/
 PYTHON_DIR	:=	$(PARDIR)slp-250
 ZLIB_DIR	:=	$(PARDIR)zlib-1.2.3
 EXTRA_LIBS	:=	-L$(PYTHON_DIR) -L$(ZLIB_DIR)
@@ -60,7 +60,7 @@ LIBS	:=  -lfilesystem  -lfat -lnds9 -lpython2.5 -lm -lz
 #---------------------------------------------------------------------------------
 
 # overwrite ds_rules
-LIBNDS := /C/devkitPro/dspython/libnds-1.4.6
+LIBNDS := $(DSPYTHON)/libnds-1.4.6
 
 LIBDIRS	:=	$(LIBNDS)
 

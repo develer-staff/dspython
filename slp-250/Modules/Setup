@@ -451,7 +451,7 @@ _random _randommodule.c	# Random number generator
 # This require zlib 1.1.3 (or later).
 # See http://www.gzip.org/zlib/
 #  zlib zlibmodule.c -I$(prefix)/include -L$(exec_prefix)/lib -lz
-   zlib zlibmodule.c -I/C/devkitPro/dspython/zlib-1.2.3 -L/C/devkitPro/dspython/zlib-1.2.3 -lz
+   zlib zlibmodule.c -I$(DSPYTHON)/zlib-1.2.3 -L$(DSPYTHON)/zlib-1.2.3 -lz
 # Interface to the Expat XML parser
 #
 # Expat was written by James Clark and is now maintained by a group of
