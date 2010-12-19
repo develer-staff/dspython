@@ -143,25 +143,14 @@ msys_pyds.bat file.
 cd zlib-1.2.3
 make
 
-This will stop with an error while trying to link the example, but this doesn't
-matter since we already have libz.a .
-
 
 === Compile libpython ===
 
 cd slp-250
 sh configure --host=arm-eabi --config-cache
-
-Now edit modules/Setup with your favourite text editor, and comment away (with
-#'s) the lines about a set of modules to be statically linked to libpython.
-They are about modules posix, errno, pwd, _sre, _codecs; around line 112.
-
-make
+make libpython2.5.a
 
 During make, on some machines pgen has been reported to crash. Just ignore it.
-
-This will then stop with an error while linking the python executable, which
-is useless to us since we already have libpython2.5.a .
 
 
 === Alter devkitarm linker settings ===
