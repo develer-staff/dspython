@@ -14,9 +14,6 @@ export DEPSDIR	:=	$(CURDIR)
 
 .PHONY: clean
 
-#all: wrappers9 wrappers7
-#	ar rc libpynds.a source/arm9/wrap_*.o source/arm7/wrap_*.o
-
 all: lib9 lib7
 
 lib9: wrappers9
@@ -34,5 +31,4 @@ wrappers7:
 	$(MAKE) -f Makefile.arm7
 
 clean:
-	#rm -rf source/arm9/*.c source/arm9/*.o source/arm9/*.d source/arm7/*.c source/arm7/*.o source/arm7/*.d libpynds.a
 	rm -rf source/arm9/*.c source/arm9/*.o source/arm9/*.d source/arm7/*.c source/arm7/*.o source/arm7/*.d libnds9.a libnds7.a
