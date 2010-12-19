@@ -28,7 +28,7 @@ INCLUDES	:=	include
 PARDIR		:=	$(DSPYTHON)/
 PYTHON_DIR	:=	$(PARDIR)slp-250
 ZLIB_DIR	:=	$(PARDIR)zlib-1.2.3
-EXTRA_LIBS	:=	-L$(PYTHON_DIR) -L$(ZLIB_DIR)
+EXTRA_LIBS	:=	-L$(PYTHON_DIR) -L$(ZLIB_DIR) -L$(DSPYTHON)/wrap_libnds
 
 
 #---------------------------------------------------------------------------------
@@ -52,7 +52,7 @@ LDFLAGS	:=	-specs=ds_arm9.specs -g $(ARCH) -mno-fpu -Wl,-Map,$(notdir $*.map) $(
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
-LIBS	:=  -lfilesystem  -lfat -lnds9 -lpython2.5 -lm -lz
+LIBS	:= -lfilesystem -lfat -lnds9 -lpython2.5 -lm -lz
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
@@ -60,16 +60,12 @@ LIBS	:=  -lfilesystem  -lfat -lnds9 -lpython2.5 -lm -lz
 #---------------------------------------------------------------------------------
 
 # overwrite ds_rules
-LIBNDS := $(DSPYTHON)/libnds-1.4.6
-
+LIBNDS := $(DEVKITPRO)/libnds
 LIBDIRS	:=	$(LIBNDS)
 
 EXTERNALINCLUDES :=	$(PYTHON_DIR) \
 			$(PYTHON_DIR)/include \
 			$(PYTHON_DIR)/Stackless
-                         			
-			
-
 
 #---------------------------------------------------------------------------------
 # no real need to edit anything past this point unless you need to add additional

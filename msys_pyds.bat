@@ -12,15 +12,11 @@ SET PATH=%MINGWDIR%/bin;%DEVKITPRO%/msys/bin;%DEVKITARM%/bin;%PYTHONDIR%/;%PYTHO
 SET INCLUDE=%DEVKITARM%/arm-eabi/include
 SET LIB=%DEVKITARM%/arm-eabi/lib
 
-rem ndslib
-SET NDSLIB_INCLUDE=%DSPYTHON%/libnds-1.4.6/include
-SET NDSLIB_LIB=%DSPYTHON%/libnds-1.4.6/lib
-
 rem stackless
 set ARCH=-mthumb -mthumb-interwork
 set BASECFLAGS=-ffast-math %ARCH% -DARM9 -DNDS
 set CFLAGS=-ffast-math %ARCH% -DARM9 -DNDS
-set LDFLAGS=-specs=ds_arm9.specs -g %ARCH% -lnds9 -L%NDSLIB_LIB%
+set LDFLAGS=-specs=ds_arm9.specs -g %ARCH% -lnds9 -L%DEVKITPRO%/libnds/lib
 
 set CC_FOR_BUILD=gcc
 set PYTHON_FOR_BUILD=%PYTHONDIR%/python

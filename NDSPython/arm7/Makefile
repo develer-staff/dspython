@@ -42,7 +42,7 @@ LIBS	:=	-ldswifi7 -lmm7 -lnds7
 # list of directories containing libraries, this must be the top level containing
 # include and lib
 #---------------------------------------------------------------------------------
-LIBNDS := $(DSPYTHON)/libnds-1.4.6
+LIBNDS := $(DEVKITPRO)/libnds
 LIBDIRS	:=	$(LIBNDS)
  
   
@@ -70,7 +70,7 @@ export OFILES	:=	$(addsuffix .o,$(BINFILES)) \
 export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 			$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
 			-I$(CURDIR)/$(BUILD)
- 
+
 export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 
 #---------------------------------------------------------------------------------
