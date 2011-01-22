@@ -1,0 +1,9 @@
+CFLAGS += -DARM7
+
+PYTHON := python
+PYREXC := $(PYTHONDIR)/Scripts/pyrexc.py
+
+all: source/arm7/wrap_touch.o
+
+source/arm7/wrap_touch.c: include/nds/arm7/wrap_touch.pyx
+	$(PYTHON) $(PYREXC) include/nds/arm7/wrap_touch.pyx -o source/arm7/wrap_touch.c

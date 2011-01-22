@@ -1,0 +1,44 @@
+CFLAGS += -DARM9
+
+PYTHON := python
+PYREXC := $(PYTHONDIR)/Scripts/pyrexc.py
+
+all: source/arm9/wrap_console.o \
+	 source/arm9/wrap_video.o \
+	 source/arm9/wrap_videoGL.o \
+	 source/arm9/wrap_rumble.o \
+	 source/arm9/wrap_system.o \
+	 source/arm9/wrap_interrupts.o \
+	 source/arm9/wrap_input.o \
+	 source/arm9/wrap_timers.o \
+	 source/arm9/wrap_background.o
+
+source/arm9/wrap_input.c: include/nds/arm9/wrap_input.pyx
+	$(PYTHON) $(PYREXC) include/nds/arm9/wrap_input.pyx -o source/arm9/wrap_input.c
+
+source/arm9/wrap_console.c: include/nds/arm9/wrap_console.pyx
+	$(PYTHON) $(PYREXC) include/nds/arm9/wrap_console.pyx -o source/arm9/wrap_console.c
+
+source/arm9/wrap_video.c: include/nds/arm9/wrap_video.pyx
+	$(PYTHON) $(PYREXC) include/nds/arm9/wrap_video.pyx -o source/arm9/wrap_video.c
+
+source/arm9/wrap_videoGL.c: include/nds/arm9/wrap_videoGL.pyx
+	$(PYTHON) $(PYREXC) include/nds/arm9/wrap_videoGL.pyx -o source/arm9/wrap_videoGL.c
+
+source/arm9/wrap_rumble.c: include/nds/arm9/wrap_rumble.pyx
+	$(PYTHON) $(PYREXC) include/nds/arm9/wrap_rumble.pyx -o source/arm9/wrap_rumble.c
+
+source/arm9/wrap_background.c: include/nds/arm9/wrap_background.pyx
+	$(PYTHON) $(PYREXC) include/nds/arm9/wrap_background.pyx -o source/arm9/wrap_background.c
+
+source/arm9/wrap_keyboard.c: include/nds/arm9/wrap_keyboard.pyx
+	$(PYTHON) $(PYREXC) include/nds/arm9/wrap_keyboard.pyx -o source/arm9/wrap_keyboard.c
+
+source/arm9/wrap_system.c: include/nds/wrap_system.pyx
+	$(PYTHON) $(PYREXC) include/nds/wrap_system.pyx -o source/arm9/wrap_system.c
+
+source/arm9/wrap_interrupts.c: include/nds/wrap_interrupts.pyx
+	$(PYTHON) $(PYREXC) include/nds/wrap_interrupts.pyx -o source/arm9/wrap_interrupts.c
+
+source/arm9/wrap_timers.c: include/nds/wrap_timers.pyx
+	$(PYTHON) $(PYREXC) include/nds/wrap_timers.pyx -o source/arm9/wrap_timers.c
